@@ -1,0 +1,14 @@
+{
+  "name": "rollinggirl",
+  "version": "1.0.0",
+  "description": "She's giving it her all",
+  "main": "roll.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sabrina Lionheart <Sabrina@Lionheart.im>",
+  "license": "ISC",
+  "dependencies": {
+    "math-expression-evaluator": "^1.3.7"
+  }
+}

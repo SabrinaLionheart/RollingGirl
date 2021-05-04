@@ -14,26 +14,53 @@ let roll = (r) => {
     let rollLog = [];
     // You wouldn't trick me into just doing math would you?
     let gotToRoll = false;
-    while (match = /(\d*)d(\d+)/.exec(r)) {
+    while (match = /([adbw]?)(\d*)d(\d+)/.exec(r)) {
         // I'm glad I can trust you
         gotToRoll = true;
 
+        let special = match[1];
+
         let n; // How many rolls today?
-        if (match[1] !== '') {
-            n = parseInt(match[1]);
+        if (match[2] !== '') {
+            n = parseInt(match[2]);
         } else {
-            n = 1
+            if (special == '') {
+                n = 1
+            } else {
+                n = 2
+            }
         }
         // What kind of dice is this?
-        let s = parseInt(match[2]);
+        let s = parseInt(match[3]);
 
         // Do rolls, very fun
         let rolls = Array.from({ length: n }, (v, i) => getRandomInt(1, s));
         // Sum up the rolls, less fun
-        let total = rolls.reduce((acc, v) => acc + v, 0);
 
-        // Lets write that down
-        rollLog.push(`${match[0]}: ${rolls.join(' + ')} = ${total}`);
+        let total = 0;
+        switch (special) {
+            case "a":
+            case "b":
+                if (rolls.length > 0) {
+                    total = Math.max(...rolls);
+                }
+                // Lets write that down
+                rollLog.push(`${match[0]}: ${rolls.join(' , ')} Best: ${total}`);
+                break;
+            case "d":
+            case "w":
+                if (rolls.length > 0) {
+                    total = Math.min(...rolls);
+                }
+                // Lets write that down
+                rollLog.push(`${match[0]}: ${rolls.join(' , ')} Worst: ${total}`);
+                break;
+            default:
+                total = rolls.reduce((acc, v) => acc + v, 0);
+                // Lets write that down
+                rollLog.push(`${match[0]}: ${rolls.join(' + ')} = ${total}`);
+                break;
+        }
 
         // Better put the rolls back into the math
         // Can't roll all day...

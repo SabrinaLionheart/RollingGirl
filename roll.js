@@ -8,12 +8,15 @@ let getRandomInt = function (min, max) {
 };
 
 // Got some math with rolls?
-let roll = (r) => {
+let roll = (r, logging = false) => {
 
     // Lets track what we roll
     let rollLog = [];
+    let message = '';
+
     // You wouldn't trick me into just doing math would you?
     let gotToRoll = false;
+
     while (match = /([adbw]?)(\d*)d(\d+)/.exec(r)) {
         // I'm glad I can trust you
         gotToRoll = true;
@@ -69,11 +72,11 @@ let roll = (r) => {
 
     if (!gotToRoll) {
         // How could you? You tricked me!
-        console.log("Aww, I thought we were going to roll dice. :(")
+        message += "Aww, I thought we were going to roll dice. :(\n";
     }
 
     // Talk about what we did
-    let message = rollLog.join("\n");
+    message += rollLog.join("\n");
     message += `\nMath: ${r}`;
     try {
         let result = mexp.eval(r);
@@ -82,7 +85,10 @@ let roll = (r) => {
         message += `\nTotal: I can't do that math!`
     }
 
-    console.log(message);
+    if (logging) {
+        console.log(message);
+    }
+    return message;
 }
 
-roll(process.argv[2]);
+roll(process.argv[2], true);

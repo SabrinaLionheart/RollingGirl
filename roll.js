@@ -17,6 +17,7 @@ let roll = (r, logging = false) => {
     // You wouldn't trick me into just doing math would you?
     let gotToRoll = false;
 
+    let match;
     while (match = /([adbw]?)(\d*)d(\d+)/.exec(r)) {
         // I'm glad I can trust you
         gotToRoll = true;

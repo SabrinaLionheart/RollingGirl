@@ -42,28 +42,31 @@ let roll = (r, logging = false) => {
         // Sum up the rolls, less fun
 
         let total = 0;
-        switch (special) {
-            case "a":
-            case "b":
-                if (rolls.length > 0) {
+        if (rolls.length <= 1) {
+            if (rolls.length == 1) {
+                total = rolls[0];
+            }
+            rollLog.push(`${match[0]}: ${total}`);
+        } else {
+            switch (special) {
+                case "a":
+                case "b":
                     total = Math.max(...rolls);
-                }
-                // Lets write that down
-                rollLog.push(`${match[0]}: ${rolls.join(' , ')} Best: ${total}`);
-                break;
-            case "d":
-            case "w":
-                if (rolls.length > 0) {
+                    // Lets write that down
+                    rollLog.push(`${match[0]}: ${rolls.join(' , ')} Best: ${total}`);
+                    break;
+                case "d":
+                case "w":
                     total = Math.min(...rolls);
-                }
-                // Lets write that down
-                rollLog.push(`${match[0]}: ${rolls.join(' , ')} Worst: ${total}`);
-                break;
-            default:
-                total = rolls.reduce((acc, v) => acc + v, 0);
-                // Lets write that down
-                rollLog.push(`${match[0]}: ${rolls.join(' + ')} = ${total}`);
-                break;
+                    // Lets write that down
+                    rollLog.push(`${match[0]}: ${rolls.join(' , ')} Worst: ${total}`);
+                    break;
+                default:
+                    total = rolls.reduce((acc, v) => acc + v, 0);
+                    // Lets write that down
+                    rollLog.push(`${match[0]}: ${rolls.join(' + ')} = ${total}`);
+                    break;
+            }
         }
 
         // Better put the rolls back into the math

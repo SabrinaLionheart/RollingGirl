@@ -19,7 +19,7 @@ let roll = (r, logging = false) => {
     let gotToRoll = false;
 
     let match;
-    while (match = /([adbw]?)(\d*)d(\d+)/.exec(r)) {
+    while (match = /([adbwe]?)(\d*)d(\d+)/.exec(r)) {
         // I'm glad I can trust you
         gotToRoll = true;
 
@@ -29,7 +29,7 @@ let roll = (r, logging = false) => {
         if (match[2] !== '') {
             n = parseInt(match[2]);
         } else {
-            if (special == '') {
+            if (special == '' || special == 'e') {
                 n = 1
             } else {
                 n = 2
@@ -39,11 +39,35 @@ let roll = (r, logging = false) => {
         let s = parseInt(match[3]);
 
         // Do rolls, very fun
-        let rolls = Array.from({ length: n }, (v, i) => getRandomInt(1, s));
-        // Sum up the rolls, less fun
+        let rolls;
+        switch (special) {
+            case 'e':
+                rolls = Array.from({ length: n }, (v, i) => {
+                    if (s <= 1) {
+                        return [s];
+                    }
+                    let roll = getRandomInt(1, s);
+                    let allRolls = [];
+                    while (roll == s) {
+                        allRolls.push(roll);
+                        roll = getRandomInt(1, s);
+                    }
+                    allRolls.push(roll);
+                    return allRolls
+                });
+                break;
+            default:
+                rolls = Array.from({ length: n }, (v, i) => {
+                    if (s <= 1) {
+                        return s;
+                    }
+                    return getRandomInt(1, s)
+                });
+        }
 
+        // Sum up the rolls, less fun
         let total = 0;
-        if (rolls.length <= 1) {
+        if (rolls.length <= 1 && special != "e") {
             if (rolls.length == 1) {
                 total = rolls[0];
             }
@@ -54,13 +78,25 @@ let roll = (r, logging = false) => {
                 case "b":
                     total = Math.max(...rolls);
                     // Lets write that down
-                    rollLog.push(`${match[0]}: ${rolls.join(' , ')} Best: ${total}`);
+                    rollLog.push(`${match[0]}: ${rolls.join(', ')} Best: ${total}`);
                     break;
                 case "d":
                 case "w":
                     total = Math.min(...rolls);
                     // Lets write that down
-                    rollLog.push(`${match[0]}: ${rolls.join(' , ')} Worst: ${total}`);
+                    rollLog.push(`${match[0]}: ${rolls.join(', ')} Worst: ${total}`);
+                    break;
+                case "e":
+                    total = rolls.reduce((acc, v) => acc + v.reduce((acc2, v2) => { return acc2 + v2 }, 0), 0);
+                    // Lets write that down
+                    let rollChat = rolls.map((roll) => {
+                        if (roll.length == 1) {
+                            return roll[0]
+                        } else {
+                            return `Boom(${roll.join(',')})`;
+                        }
+                    })
+                    rollLog.push(`${match[0]}: ${rollChat.join(', ')} Total: ${total}`);
                     break;
                 default:
                     total = rolls.reduce((acc, v) => acc + v, 0);

@@ -2,9 +2,10 @@ const mexp = require("math-expression-evaluator");
 
 // Shamelessly stolen
 let getRandomInt = function (min, max) {
+    max = 1 + parseInt(max);
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is inclusive and the minimum is inclusive
 };
 
 // Got some math with rolls?

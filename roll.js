@@ -96,7 +96,11 @@ let roll = (r, logging = false) => {
                             return `Boom(${roll.join(',')})`;
                         }
                     })
-                    rollLog.push(`${match[0]}: ${rollChat.join(', ')} Total: ${total}`);
+                    if (rolls.length == 0 || (rolls.length == 1 && rolls[0].length == 1)) {
+                        rollLog.push(`${match[0]}: ${total}`);
+                    } else {
+                        rollLog.push(`${match[0]}: ${rollChat.join(', ')} Total: ${total}`);
+                    }
                     break;
                 default:
                     total = rolls.reduce((acc, v) => acc + v, 0);
